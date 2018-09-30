@@ -5,20 +5,11 @@ import './style/App.css'
 import './style/Antd.css'
 import Brand from './component/Brand'
 import { Layout } from 'antd'
-
-function importAll(r) {
-  return r.keys().map(r)
-}
-
-const imagesImport = importAll(
-  require.context('./assets/manga/', false, /\.(png|jpe?g|svg)$/)
-)
-
+import axios from 'axios'
+//
 const { Header, Footer, Sider, Content } = Layout
-
-const imageAmount = imagesImport.length + 1
+const imageAmount = 30 + 1
 const imageWidth = 540
-
 const Canvas = styled.div`
   flex-grow: 1;
   overflow-x: scroll;
@@ -42,7 +33,7 @@ const Canvas = styled.div`
     }
     img {
       height: 98%;
-      opacity: 0.35;
+      opacity: 0.28;
       margin-right: 4px;
       cursor: pointer;
       transition: 0.35s;
@@ -58,14 +49,28 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      active: 0
+      active: 0,
+      title: '',
+      chapter: '',
+      pages: []
     }
     this.handleActive = this.handleActive.bind(this)
   }
-  componentDidMount() {}
+  componentDidMount() {
+    axios
+      .get('https://us-central1-mangarizer-949e1.cloudfunctions.net/mangaApi')
+      .then(res => {
+        // console.log(res.data)
+        this.setState({
+          ...this.state,
+          ...res.data
+        })
+      })
+  }
   handleActive(pointer) {
     this.setState({
-      active: pointer
+      ...this.state,
+      ...{ active: pointer }
     })
   }
   render() {
@@ -83,11 +88,12 @@ class App extends Component {
               <Canvas>
                 <div className="_container">
                   <span className="_lefter" />
-                  {imagesImport.map((img, index) => (
+                  {this.state.pages.map((page, index) => (
                     <img
                       className={this.state.active === index && '_active'}
                       onMouseOver={() => this.handleActive(index)}
-                      src={img}
+                      src={page.src}
+                      key={index}
                       alt=""
                     />
                   ))}
