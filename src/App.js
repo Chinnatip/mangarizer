@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import 'antd/dist/antd.css'
 import './style/App.css'
 import './style/Antd.css'
@@ -45,11 +45,11 @@ class App extends Component {
       ...{ active: pointer }
     })
   }
-  nextChapter() {
+  nextChapter(indent) {
     const { query } = this.state
     const nextChapterQuery = {
       ...query,
-      ...{ chapter: Number(query.chapter) + 1 }
+      ...{ chapter: Number(query.chapter) + indent }
     }
     setLoadingState(this, nextChapterQuery)
     fetchManga(URL, nextChapterQuery, this)
@@ -109,29 +109,56 @@ class App extends Component {
                     />
                     <hr />
                     <ButtonGroup>
-                      <Button onClick={() => this.searchManga()} type="primary">
+                      <Button
+                        onClick={() => this.nextChapter(-1)}
+                        type="primary"
+                      >
+                        <Icon type="left" />
+                        Previous
+                      </Button>
+                      <Button
+                        onClick={() => this.searchManga()}
+                        type="primary"
+                        icon="search"
+                      >
                         Search
                       </Button>
-                      <Button onClick={() => this.nextChapter()} type="primary">
-                        Next Chapter
+                      <Button
+                        onClick={() => this.nextChapter(1)}
+                        type="primary"
+                      >
+                        Next
                         <Icon type="right" />
                       </Button>
                     </ButtonGroup>
                   </span>
                   {loaded ? (
-                    pages.map((page, index) => (
-                      <img
-                        className={active === index && '_active'}
-                        onMouseOver={() => this.handleActive(index)}
-                        src={page.src}
-                        key={index}
-                        alt=""
-                      />
-                    ))
+                    <Fragment>
+                      {pages.map((page, index) => (
+                        <img
+                          className={active === index && '_active'}
+                          onMouseOver={() => this.handleActive(index)}
+                          src={page.src}
+                          key={index}
+                          alt=""
+                        />
+                      ))}
+                      <Button
+                        onClick={() => this.nextChapter(1)}
+                        type="primary"
+                      >
+                        Next Chapter
+                        <Icon type="right" />
+                      </Button>
+                    </Fragment>
                   ) : (
-                    <span>Loading ....</span>
+                    <span className="loader-setup">
+                      <img
+                        src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
+                        alt="loading image"
+                      />
+                    </span>
                   )}
-                  <a onClick={() => this.nextChapter()}>Next Chapter</a>
                 </div>
               </Canvas>
             </Content>

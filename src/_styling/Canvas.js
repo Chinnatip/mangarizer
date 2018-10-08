@@ -43,6 +43,9 @@ export const Canvas = styled.div`
         margin-left: 2vw;
       }
     }
+    .loader-setup {
+      display: inline-block;
+    }
     img {
       height: 98%;
       margin-right: 4px;
