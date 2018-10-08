@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import logo from '../assets/logo.svg'
+import logo from '../_assets/logo.svg'
 
 const BrandHeader = styled.span`
   img {
