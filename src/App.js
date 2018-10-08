@@ -3,12 +3,16 @@ import 'antd/dist/antd.css'
 import './style/App.css'
 import './style/Antd.css'
 import Brand from './component/Brand'
-import { Layout } from 'antd'
+import { Layout, Input, AutoComplete, Button, Icon } from 'antd'
 import { URL, DEFAULT_MANGA, MANGA_LISTS } from './_assets/static'
 import { fetchManga, setLoadingState } from './_methods/fetch'
-import { matchManga } from './_methods/matchManga'
+import {
+  matchChapter,
+  matchMangaTag,
+  matchMangaTitle
+} from './_methods/matchManga'
 import { Canvas } from './_styling/Canvas'
-const { Header, Footer, Sider, Content } = Layout
+const { Header, Content } = Layout
 //
 class App extends Component {
   constructor(props) {
@@ -17,7 +21,7 @@ class App extends Component {
       pages: [],
       active: 0,
       loaded: false,
-      query: DEFAULT_MANGA
+      query: JSON.parse(localStorage.getItem('default_manga')) || DEFAULT_MANGA
     }
     this.handleActive = this.handleActive.bind(this)
     this.changeTitle = this.changeTitle.bind(this)
@@ -33,6 +37,7 @@ class App extends Component {
     const { query } = this.state
     setLoadingState(this, query)
     fetchManga(URL, query, this)
+    localStorage.setItem('default_manga', JSON.stringify(query))
   }
   handleActive(pointer) {
     this.setState({
@@ -49,16 +54,15 @@ class App extends Component {
     setLoadingState(this, nextChapterQuery)
     fetchManga(URL, nextChapterQuery, this)
   }
-  changeTitle(e) {
-    const { value } = e.target
+  changeTitle(value) {
     this.setState({
       ...this.state,
       ...{
         query: {
           ...this.state.query,
           ...{
-            title: value,
-            chapter: matchManga(MANGA_LISTS, value)
+            title: matchMangaTag(value),
+            chapter: matchChapter(value)
           }
         }
       }
@@ -77,6 +81,7 @@ class App extends Component {
   }
   render() {
     const { query, loaded, pages, active } = this.state
+    const ButtonGroup = Button.Group
     return (
       <div className="App">
         <Layout>
@@ -88,26 +93,30 @@ class App extends Component {
               <Canvas>
                 <div className="_container">
                   <span className="_lefter">
-                    <select
-                      value={query.title}
+                    <h2>SELECT MANGA</h2>
+                    <AutoComplete
+                      dataSource={MANGA_LISTS.map(list => list.title)}
+                      defaultValue={matchMangaTitle(query.title)}
+                      placeholder="Input Manga name"
                       onChange={e => this.changeTitle(e)}
-                    >
-                      {MANGA_LISTS.map(({ val, title }) => (
-                        <option value={val}>{title}</option>
-                      ))}
-                    </select>
-                    <br />
-                    <input
+                    />
+                    <Input
+                      className="ant-input-chapter"
                       name="chapter"
                       type="text"
                       value={query.chapter}
                       onChange={e => this.changeChapter(e)}
                     />
-                    <br />
-                    <a onClick={() => this.searchManga()}>Search</a>
-                    <br />
-                    <a onClick={() => this.nextChapter()}>Next Chapter</a>
-                    <br />
+                    <hr />
+                    <ButtonGroup>
+                      <Button onClick={() => this.searchManga()} type="primary">
+                        Search
+                      </Button>
+                      <Button onClick={() => this.nextChapter()} type="primary">
+                        Next Chapter
+                        <Icon type="right" />
+                      </Button>
+                    </ButtonGroup>
                   </span>
                   {loaded ? (
                     pages.map((page, index) => (

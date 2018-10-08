@@ -21,8 +21,26 @@ export const Canvas = styled.div`
     width: ${imageAmount * imageWidth}px;
     span._lefter {
       display: inline-block;
+      h2 {
+        font-family: 'Montserrat';
+        font-weight: 300;
+      }
+      hr {
+        opacity: 0.3;
+        margin: 13px 0;
+      }
+      .ant-select-auto-complete {
+        width: 180px;
+        vertical-align: top;
+      }
+      .ant-input-chapter {
+        margin-left: 10px;
+        width: 100px;
+        vertical-align: top;
+      }
       @media (min-width: 700px) {
-        width: 500px;
+        width: 30vw;
+        margin-left: 2vw;
       }
     }
     img {

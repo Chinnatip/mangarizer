@@ -1,8 +1,8 @@
 export const URL = `https://us-central1-mangarizer-949e1.cloudfunctions.net/mangaChapter`
 
 export const DEFAULT_MANGA = {
-  title: 'onepiece',
-  chapter: 900
+  title: 'attack_on_titan',
+  chapter: 100
 }
 
 export const MANGA_LISTS = [
