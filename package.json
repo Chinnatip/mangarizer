@@ -15,7 +15,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "fire-host": "npm run build; firebase deploy --only hosting",
+    "fire-host": "npm run build && firebase deploy --only hosting",
     "fire-func": "firebase deploy --only functions"
   }
 }

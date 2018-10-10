@@ -8,6 +8,7 @@ import * as cors from 'cors'
 //
 import { mangaSoma } from './_assets/static'
 import { scrapChapter } from './_methods/scrap'
+import { mangarelease } from './_methods/scrap2'
 
 // Express setup
 const app = express()
@@ -44,6 +45,33 @@ export const mangaChapter = functions.https.onRequest((request, response) => {
         return scrapChapter(data)
       }
     }
+    requestPromise(options)
+      .then(result => {
+        response.send({
+          status: true,
+          message: result
+        })
+      })
+      .catch(err => {
+        response.send({
+          status: false,
+          message: err
+        })
+      })
+  })
+})
+export const mangaRelease = functions.https.onRequest((request, response) => {
+  return corsHandler(request, response, () => {
+    const URL = `http://www.niceoppai.net/`
+    // Cheerio setup
+    const options = {
+      uri: URL,
+      transform: function(body) {
+        const data = cheerio.load(body)
+        return mangarelease(data)
+      }
+    }
+    
     requestPromise(options)
       .then(result => {
         response.send({

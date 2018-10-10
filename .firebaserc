@@ -1,5 +1,6 @@
 {
   "projects": {
-    "prod": "mangarizer-949e1"
+    "prod": "mangarizer-949e1",
+    "default": "mangarizer-mon"
   }
 }
