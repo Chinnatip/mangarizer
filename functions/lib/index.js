@@ -9,8 +9,9 @@ const cheerio = require('cheerio')
 const express = require('express')
 const cors = require('cors')
 //
-const static_1 = require('./_assets/static')
-const scrap_1 = require('./_methods/scrap')
+const static_1 = require("./_assets/static");
+const scrap_1 = require("./_methods/scrap");
+const scrap2_1 = require("./_methods/scrap2");
 // Express setup
 const app = express()
 const corsHandler = cors({ origin: true })
@@ -50,13 +51,38 @@ exports.mangaChapter = functions.https.onRequest((request, response) => {
           status: true,
           message: result
         })
-      })
-      .catch(err => {
-        response.send({
-          status: false,
-          message: err
+            .catch(err => {
+            response.send({
+                status: false,
+                message: err
+            });
+        });
+    });
+});
+exports.mangaRelease = functions.https.onRequest((request, response) => {
+    return corsHandler(request, response, () => {
+        const URL = `http://www.niceoppai.net/`;
+        // Cheerio setup
+        const options = {
+            uri: URL,
+            transform: function (body) {
+                const data = cheerio.load(body);
+                return scrap2_1.mangarelease(data);
+            }
+        };
+        requestPromise(options)
+            .then(result => {
+            response.send({
+                status: true,
+                message: result
+            });
         })
-      })
-  })
-})
+            .catch(err => {
+            response.send({
+                status: false,
+                message: err
+            });
+        });
+    });
+});
 //# sourceMappingURL=index.js.map
