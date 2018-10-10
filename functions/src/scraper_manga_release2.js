@@ -40,10 +40,10 @@ const mangarelease = data => {
   let result = []
   list1.map((index, item) => {
     try {
-      const a1 = item
+      // const a1 = item
       // console.log(item)
-      const ReleaseMangatitle = a1.attribs
-      // console.log(item.next.parent.attribs)
+      // const ReleaseMangatitle = a1.attribs
+      console.log(item.next.parent.attribs)
       // const a2 = item.next.parent.attribs
       // const ReleaseManga = a2.attribs
       // result = [...result, ...[{Title: ReleaseMangatitle.title,TitleLinks: ReleaseMangatitle.href , 
