@@ -70,7 +70,7 @@ export const mangaRelease = functions.https.onRequest((request, response) => {
         return scrapmangarelease(data)
       }
     }
-    
+
     requestPromise(options)
       .then(result => {
         response.send({
