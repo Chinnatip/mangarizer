@@ -10,7 +10,6 @@ const cors = require("cors");
 //
 const static_1 = require("./_assets/static");
 const scrap_1 = require("./_methods/scrap");
-const scrap2_1 = require("./_methods/scrap2");
 // Express setup
 const app = express();
 const corsHandler = cors({ origin: true });
@@ -65,7 +64,7 @@ exports.mangaRelease = functions.https.onRequest((request, response) => {
             uri: URL,
             transform: function (body) {
                 const data = cheerio.load(body);
-                return scrap2_1.mangarelease(data);
+                return scrap_1.scrapmangarelease(data);
             }
         };
         requestPromise(options)

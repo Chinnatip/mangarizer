@@ -7,8 +7,7 @@ import * as express from 'express'
 import * as cors from 'cors'
 //
 import { mangaSoma } from './_assets/static'
-import { scrapChapter } from './_methods/scrap'
-import { mangarelease } from './_methods/scrap2'
+import { scrapChapter,scrapmangarelease } from './_methods/scrap'
 
 // Express setup
 const app = express()
@@ -68,7 +67,7 @@ export const mangaRelease = functions.https.onRequest((request, response) => {
       uri: URL,
       transform: function(body) {
         const data = cheerio.load(body)
-        return mangarelease(data)
+        return scrapmangarelease(data)
       }
     }
     
