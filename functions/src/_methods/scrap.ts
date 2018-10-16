@@ -40,3 +40,17 @@ export const scrapmangarelease = data => {
       })
   return result
 }
+export const scrapmangalist = data => {
+  const list = data('div#sct_content div.det a')
+  let result = []
+  list.map((index, item) => {
+    try {
+      const b = item.children
+      const MangaListTitle = b[0]
+      const MangaListLinks = item.attribs
+      result = [...result, ...[{ title : MangaListTitle.data ,links: MangaListLinks.href }]]
+    }
+    catch (err) {}
+  })
+  return result
+}

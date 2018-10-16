@@ -7,7 +7,7 @@ import * as express from 'express'
 import * as cors from 'cors'
 //
 import { mangaSoma } from './_assets/static'
-import { scrapChapter,scrapmangarelease } from './_methods/scrap'
+import { scrapChapter,scrapmangarelease,scrapmangalist } from './_methods/scrap'
 
 // Express setup
 const app = express()
@@ -36,9 +36,9 @@ export const mangaChapter = functions.https.onRequest((request, response) => {
     const { title, chapter } = request.body
     const CUSTOM = title || 'boku_no_hero_academia'
     const CHAPTER = chapter || '1-TH'
-    const URL = `http://www.niceoppai.net/${CUSTOM}/${CHAPTER}/?all`
+    const URLmangaChapter = `http://www.niceoppai.net/${CUSTOM}/${CHAPTER}/?all`
     const options = {
-      uri: URL,
+      uri: URLmangaChapter,
       transform: function(body) {
         const data = cheerio.load(body)
         return scrapChapter(data)
@@ -61,16 +61,15 @@ export const mangaChapter = functions.https.onRequest((request, response) => {
 })
 export const mangaRelease = functions.https.onRequest((request, response) => {
   return corsHandler(request, response, () => {
-    const URL = `http://www.niceoppai.net/`
+    const URLmangaRelease = `http://www.niceoppai.net/`
     // Cheerio setup
     const options = {
-      uri: URL,
+      uri: URLmangaRelease,
       transform: function(body) {
         const data = cheerio.load(body)
         return scrapmangarelease(data)
       }
     }
-
     requestPromise(options)
       .then(result => {
         response.send({
@@ -84,5 +83,46 @@ export const mangaRelease = functions.https.onRequest((request, response) => {
           message: err
         })
       })
+  })
+})
+export const ScrapMangaList = functions.https.onRequest((request, response) => {
+  return corsHandler(request, response, () => {
+    const PageNumb = [...Array(30).keys()]
+    let B = []
+    PageNumb.map(item => {
+      const URLScrapMangaList = `http://www.niceoppai.net/manga_list/all/any/name-az/${item+1}/`
+      // Cheerio setup
+      const options = {
+        uri: URLScrapMangaList,
+        transform: function(body) {
+          const data = cheerio.load(body)
+          return scrapmangalist(data)
+        }
+      }
+      const A = a(options)
+      .then()
+      .catch()
+      response.send({
+        status: false,
+        message: A
+      })
+    })
+    async function a(options) {
+      try {
+        let ListResult = await requestPromise(options)
+        .then()
+        .catch() 
+        B = {...B,...ListResult}
+
+      } 
+      catch(error) {
+        err => {
+            response.send({
+              status: false,
+              message: err
+            })}
+          }
+    }
+    
   })
 })

@@ -40,7 +40,7 @@ const options = {
   uri: URL,
   transform: function(body) {
     const data = cheerio.load(body)
-    const response = mangarelease(data)
+    const response = scrapmangarelease(data)
     return response
   }
 }
